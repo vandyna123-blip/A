@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រព័ន្ធគ្រប់គ្រងវត្តមាននិស្សិតតាម Cloud QR Code</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- QR Code Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <!-- Canvas Confetti for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Header Navigation -->
+    <header class="bg-indigo-950 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="goToHome()">
+                <div class="bg-white p-2 rounded-xl text-indigo-950 shadow">
+                    <i class="fa-solid fa-qrcode text-2xl animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight">ប្រព័ន្ធវត្តមាន QR <span class="text-xs bg-emerald-500 text-white px-2 py-0.5 rounded ml-1">Cloud Live</span></h1>
+                    <p class="text-xs text-indigo-200">សាកលវិទ្យាល័យបច្ចេកវិទ្យា</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <!-- Real-time Cloud Status Bar -->
+                <span id="network-status" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 shadow-sm transition-all duration-300">
+                    <span class="w-1.5 h-1.5 mr-1.5 bg-amber-500 rounded-full animate-ping"></span>
+                    <span id="status-text">កំពុងភ្ជាប់ទៅកាន់ Cloud...</span>
+                </span>
+                
+                <!-- Reset Button -->
+                <button onclick="goToHome()" class="px-3 py-1.5 bg-indigo-900 text-indigo-100 hover:bg-indigo-800 rounded-lg text-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-house"></i> <span class="hidden md:inline">ទំព័រដើម</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center">
+        
+        <!-- ================= HOME SCREEN ================= -->
+        <div id="home-screen" class="w-full max-w-4xl grid md:grid-cols-2 gap-8 py-6">
+            <!-- Left Promo Box -->
+            <div class="flex flex-col justify-center space-y-6 text-center md:text-left pr-0 md:pr-6">
+                <span class="px-3 py-1 text-xs font-semibold text-emerald-700 bg-emerald-100 rounded-full w-max mx-auto md:mx-0">
+                    ប្រព័ន្ធ Cloud ធ្វើបច្ចុប្បន្នភាពរហ័សទាន់ចិត្ត v3.0
+                </span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-950 leading-tight">
+                    ការកត់ត្រាវត្តមានរហ័ស ងាយស្រួល និងសុវត្ថិភាពខ្ពស់
+                </h2>
+                <p class="text-slate-600 text-base">
+                    និស្សិតប្រើប្រាស់ទូរស័ព្ទដៃផ្ទាល់ខ្លួនស្កេន QR Code របស់សាស្ត្រាចារ្យ ដើម្បីចុះវត្តមានចូលរៀនភ្លាមៗ។ ទិន្នន័យនឹងលោតឡើងលើកុំព្យូទ័រគ្រូក្នុងពេលជាក់ស្តែង។
+                </p>
+                <div class="border-t border-slate-200 pt-4 flex gap-4 justify-center md:justify-start text-xs text-slate-500">
+                    <div><i class="fa-solid fa-cloud text-emerald-600 mr-1"></i> Cloud Sync</div>
+                    <div><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-1"></i> ទូរស័ព្ទដៃផ្ទាល់ខ្លួន</div>
+                    <div><i class="fa-solid fa-file-csv text-emerald-600 mr-1"></i> ទាញយកជា Excel</div>
+                </div>
+            </div>
+
+            <!-- Right Selection Box -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 flex flex-col justify-center space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 text-center">សូមជ្រើសរើសតួនាទីរបស់អ្នក</h3>
+                
+                <!-- Teacher Button -->
+                <button onclick="switchRole('teacher')" class="group flex items-center p-4 bg-indigo-50/50 hover:bg-indigo-50 border border-indigo-200 rounded-2xl transition duration-300 text-left w-full">
+                    <div class="p-4 bg-indigo-950 text-white rounded-xl mr-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-chalkboard-user text-2xl w-8 text-center"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-950 text-lg">ខ្ញុំជា សាស្ត្រាចារ្យ</h4>
+                        <p class="text-slate-600 text-sm">បង្កើត QR កូដ និងគ្រប់គ្រងបញ្ជីវត្តមាន</p>
+                    </div>
+                </button>
+
+                <!-- Student Button -->
+                <button onclick="switchRole('student')" class="group flex items-center p-4 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-200 rounded-2xl transition duration-300 text-left w-full">
+                    <div class="p-4 bg-emerald-600 text-white rounded-xl mr-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-user-graduate text-2xl w-8 text-center"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-950 text-lg">ខ្ញុំជា និស្សិត</h4>
+                        <p class="text-slate-600 text-sm">ស្កេន QR Code ដើម្បីចុះវត្តមាន</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= TEACHER DASHBOARD ================= -->
+        <div id="teacher-dashboard" class="w-full max-w-5xl hidden space-y-6">
+            
+            <!-- Breadcrumb & Back -->
+            <div class="flex items-center justify-between">
+                <button onclick="goToHome()" class="text-slate-600 hover:text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> ត្រឡប់ទៅទំព័រដើម
+                </button>
+                <span class="font-semibold text-slate-500">តួនាទី៖ សាស្ត្រាចារ្យ</span>
+            </div>
+
+            <!-- Create / Session Active Grid -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Left Sidebar Controls -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 h-fit">
+                    <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-indigo-950"></i> បង្កើតម៉ោងសិក្សាថ្មី
+                    </h3>
+                    
+                    <form id="create-session-form" onsubmit="event.preventDefault(); createNewSession();" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">ឈ្មោះមុខវិជ្ជា / ថ្នាក់សិក្សា *</label>
+                            <input type="text" id="session-title" required placeholder="ឧ. វិទ្យាសាស្ត្រកុំព្យូទ័រ CS102" 
+                                   class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">ឈ្មោះគ្រូឧទ្ទេស</label>
+                            <input type="text" id="session-teacher" placeholder="ឧ. លោកគ្រូ សៅ សុជា" 
+                                   class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">ម៉ោងសិក្សា</label>
+                            <input type="text" id="session-time" placeholder="ឧ. ៨:០០ - ១១:០០ ព្រឹក" 
+                                   class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-indigo-950 hover:bg-indigo-900 text-white font-bold rounded-xl shadow-lg transition">
+                            <i class="fa-solid fa-qrcode mr-1"></i> បង្កើត QR វត្តមាន
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Center/Right Area: Live QR Code & Live Stream Status -->
+                <div class="md:col-span-2 space-y-6">
+                    <!-- Session Active View -->
+                    <div id="no-active-session" class="bg-slate-100 border border-slate-200 rounded-2xl p-12 text-center text-slate-500 flex flex-col items-center justify-center space-y-4">
+                        <div class="p-4 bg-slate-200 text-slate-400 rounded-full">
+                            <i class="fa-solid fa-hourglass-empty text-3xl"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-slate-700">មិនទាន់មានការបើកម៉ោងសិក្សាទេ</h4>
+                        <p class="max-w-md text-sm">សូមបំពេញព័ត៌មានខាងឆ្វេង រួចចុច "បង្កើត QR វត្តមាន" ដើម្បីបើកទំព័រចុះឈ្មោះវត្តមានសម្រាប់និស្សិតនៅលើ Cloud។</p>
+                    </div>
+
+                    <!-- Active QR View -->
+                    <div id="active-session-view" class="hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid md:grid-cols-5 gap-6 items-center">
+                        <div class="md:col-span-2 flex flex-col items-center text-center space-y-3">
+                            <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 text-xs font-semibold rounded-full animate-pulse flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> កំពុងទទួលវត្តមានផ្សាយផ្ទាល់
+                            </span>
+                            <!-- QR Code Container -->
+                            <div id="qrcode-container" class="p-3 bg-white border-2 border-indigo-900 rounded-2xl shadow-md flex items-center justify-center">
+                                <div id="qrcode"></div>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-slate-500">កូដសម្គាល់វត្តមាន៖</span>
+                                <span id="session-short-code" class="font-mono font-bold text-lg text-indigo-950 select-all tracking-wider px-2 py-1 bg-slate-100 rounded"></span>
+                            </div>
+                        </div>
+
+                        <!-- Info details & stats -->
+                        <div class="md:col-span-3 space-y-4">
+                            <div>
+                                <h3 id="display-session-title" class="text-xl font-bold text-slate-900"></h3>
+                                <p id="display-session-teacher" class="text-sm text-slate-600"></p>
+                                <p id="display-session-time" class="text-xs text-slate-400"></p>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-2 sm:gap-4">
+                                <div class="bg-emerald-50/50 p-3 rounded-xl border border-emerald-100 text-center">
+                                    <span class="text-xs text-emerald-700 block"><i class="fa-solid fa-circle-check mr-1"></i>វត្តមាន (Present)</span>
+                                    <span id="present-count" class="text-2xl sm:text-3xl font-extrabold text-emerald-700">0</span>
+                                </div>
+                                <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100 text-center">
+                                    <span class="text-xs text-amber-700 block"><i class="fa-solid fa-envelope mr-1"></i>ច្បាប់ (Leave)</span>
+                                    <span id="leave-count" class="text-2xl sm:text-3xl font-extrabold text-amber-700">0</span>
+                                </div>
+                                <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100 text-center">
+                                    <span class="text-xs text-rose-700 block"><i class="fa-solid fa-circle-xmark mr-1"></i>អវត្តមាន (Absent)</span>
+                                    <span id="absent-count" class="text-2xl sm:text-3xl font-extrabold text-rose-700">0</span>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button onclick="stopSession()" class="flex-1 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-circle-stop mr-1"></i> បិទការកត់ត្រា
+                                </button>
+                                <button onclick="clearSessionRecords()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-trash mr-1"></i> សម្អាតបញ្ជី
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Attendance Records Section -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-900">បញ្ជីវត្តមាននិស្សិតក្នុងវគ្គសិក្សា (ផ្សាយផ្ទាល់)</h3>
+                        <p class="text-xs text-slate-500">កាលបរិច្ឆេទ៖ <span id="current-date-view">--/--/----</span></p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <!-- Add Manual Student Attendance Modal Trigger -->
+                        <button onclick="toggleManualAddModal(true)" class="flex-1 sm:flex-none px-4 py-2 text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> បញ្ចូលឈ្មោះផ្ទាល់
+                        </button>
+                        <button onclick="exportToCSV()" class="flex-1 sm:flex-none px-4 py-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-file-excel"></i> នាំចេញជា Excel/CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table View -->
+                <div class="overflow-x-auto w-full">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">ល.រ</th>
+                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">អត្តលេខនិស្សិត</th>
+                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">ឈ្មោះពេញ</th>
+                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">ម៉ោងចុះវត្តមាន</th>
+                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">ស្ថានភាព</th>
+                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">សម្គាល់/មូលហេតុ</th>
+                                <th scope="col" class="px-6 py-3.5 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">សកម្មភាព</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-table-body" class="bg-white divide-y divide-slate-200 text-sm">
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center text-slate-400">មិនទាន់មានវត្តមាននៅឡើយទេ...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= STUDENT PORTAL ================= -->
+        <div id="student-portal" class="w-full max-w-lg hidden space-y-6">
+            <!-- Breadcrumb & Back -->
+            <div class="flex items-center justify-between">
+                <button onclick="goToHome()" class="text-slate-600 hover:text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> ត្រឡប់ទៅទំព័រដើម
+                </button>
+                <span class="font-semibold text-slate-500">តួនាទី៖ និស្សិត</span>
+            </div>
+
+            <!-- Student Profile Box (Before Scanning) -->
+            <div id="student-profile-step" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-4">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-address-card text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900">បំពេញព័ត៌មាននិស្សិត</h3>
+                    <p class="text-xs text-slate-500">សូមបំពេញព័ត៌មានឱ្យបានត្រឹមត្រូវដើម្បីចុះឈ្មោះវត្តមាននៅលើ Cloud</p>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">អត្តលេខនិស្សិត (ID) *</label>
+                        <input type="text" id="student-id" placeholder="ឧ. FE109283" required
+                               class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition uppercase">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">ឈ្មោះពេញ (អក្សរឡាតាំង) *</label>
+                        <input type="text" id="student-name" placeholder="ឧ. SOK KOSAL" required
+                               class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition uppercase">
+                    </div>
+                </div>
+
+                <button onclick="saveProfileAndContinue()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow transition">
+                    បន្តទៅកាន់ការស្កេន <i class="fa-solid fa-circle-arrow-right ml-1"></i>
+                </button>
+            </div>
+
+            <!-- Scanning Mode Box -->
+            <div id="student-scan-step" class="hidden bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden space-y-4 p-6">
+                
+                <!-- Display Student Identity Header -->
+                <div class="flex items-center justify-between p-3 bg-slate-100 rounded-xl text-xs text-slate-700 mb-2">
+                    <div>
+                        <span class="text-slate-500">និស្សិត៖</span> 
+                        <strong id="student-profile-info-name">--</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-500">អត្តលេខ៖</span> 
+                        <strong id="student-profile-info-id">--</strong>
+                    </div>
+                    <button onclick="editStudentProfile()" class="text-indigo-600 hover:underline">កែប្រែ</button>
+                </div>
+
+                <!-- Tabs: Camera Scan OR Manual Entry OR Leave Request -->
+                <div class="flex border-b border-slate-200">
+                    <button id="tab-btn-camera" onclick="switchScanTab('camera')" class="flex-1 py-2.5 text-center font-bold text-xs sm:text-sm border-b-2 border-emerald-600 text-emerald-600">
+                        <i class="fa-solid fa-camera mr-1"></i> ស្កេន QR
+                    </button>
+                    <button id="tab-btn-manual" onclick="switchScanTab('manual')" class="flex-1 py-2.5 text-center font-bold text-xs sm:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-900">
+                        <i class="fa-solid fa-keyboard mr-1"></i> វាយកូដ
+                    </button>
+                    <button id="tab-btn-leave" onclick="switchScanTab('leave')" class="flex-1 py-2.5 text-center font-bold text-xs sm:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-900">
+                        <i class="fa-solid fa-envelope mr-1"></i> សុំច្បាប់
+                    </button>
+                </div>
+
+                <!-- Camera Scanner Container -->
+                <div id="scanner-view" class="space-y-4">
+                    <p class="text-xs text-slate-500 text-center">សូមតម្រង់កាមេរ៉ាទូរស័ព្ទទៅកាន់ QR Code របស់សាស្ត្រាចារ្យ</p>
+                    
+                    <div class="relative max-w-xs mx-auto overflow-hidden rounded-2xl border-2 border-slate-200 bg-slate-900 aspect-square flex items-center justify-center">
+                        <div id="qr-reader" class="w-full"></div>
+                        <!-- Simple visual scanning helper box overlay -->
+                        <div class="absolute inset-0 border-[40px] border-black/40 pointer-events-none flex items-center justify-center">
+                            <div class="w-full h-full border-2 border-emerald-400 pulse-animation rounded-lg"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-2">
+                        <button onclick="restartScanner()" class="px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl text-xs font-semibold transition">
+                            <i class="fa-solid fa-arrow-rotate-right mr-1"></i> បើកកាមេរ៉ាឡើងវិញ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Manual Code Entry Container -->
+                <div id="manual-code-view" class="hidden space-y-4">
+                    <p class="text-xs text-slate-500 text-center">បញ្ចូលកូដសម្គាល់វត្តមាន ៦ខ្ទង់ ដែលបង្ហាញនៅក្រោម QR Code របស់គ្រូ</p>
+                    
+                    <div class="max-w-xs mx-auto">
+                        <input type="text" id="manual-session-code" placeholder="ATT-XXX" maxlength="10"
+                               class="w-full text-center p-3 font-mono font-bold text-lg border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 tracking-widest uppercase">
+                    </div>
+
+                    <button onclick="submitManualAttendance()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition">
+                        បញ្ជូនវត្តមានដោយដៃ
+                    </button>
+                </div>
+
+                <!-- Leave Request Form Container -->
+                <div id="leave-request-view" class="hidden space-y-4">
+                    <p class="text-xs text-slate-500 text-center">បំពេញព័ត៌មានខាងក្រោមដើម្បីផ្ញើលិខិតសុំច្បាប់ទៅកាន់សាស្ត្រាចារ្យ</p>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">កូដថ្នាក់រៀន/វត្តមាន (សួរមិត្តភក្តិ ឬគ្រូ) *</label>
+                            <input type="text" id="leave-session-code" placeholder="ATT-XXX" maxlength="10"
+                                   class="w-full text-center p-2.5 font-mono font-bold border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 tracking-wider uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">មូលហេតុនៃការសុំច្បាប់ *</label>
+                            <textarea id="leave-reason" placeholder="ឧ. ខ្ញុំបាទ/នាងខ្ញុំ មានជំងឺផ្ដាសាយ ឬមានធុរៈគ្រួសារបន្ទាន់..." rows="2"
+                                      class="w-full p-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-sm"></textarea>
+                        </div>
+                    </div>
+
+                    <button onclick="submitLeaveRequest()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> បញ្ជូនលិខិតសុំច្បាប់
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- SUCCESSFUL SUBMISSION SCREEN -->
+            <div id="attendance-success-screen" class="hidden bg-white p-8 rounded-2xl border border-slate-200 shadow-xl text-center space-y-6">
+                <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                    <i class="fa-solid fa-circle-check text-4xl animate-bounce"></i>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-extrabold text-2xl text-slate-900">កត់ត្រាវត្តមានជោគជ័យ!</h3>
+                    <p class="text-slate-600">វត្តមានរបស់អ្នកត្រូវបានរក្សាទុកនៅលើ Cloud រួចរាល់ហើយ។</p>
+                </div>
+
+                <div id="success-status-badge" class="px-3 py-1 text-xs font-bold rounded-full w-max mx-auto bg-emerald-100 text-emerald-800">
+                    ស្ថានភាព៖ វត្តមាន (Present)
+                </div>
+
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-left text-sm text-slate-800 space-y-1.5 max-w-sm mx-auto">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">មុខវិជ្ជា៖</span>
+                        <strong id="success-class-title">---</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">និស្សិត៖</span>
+                        <strong id="success-student-name">---</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">អត្តលេខ៖</span>
+                        <strong id="success-student-id">---</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">ពេលវេលា៖</span>
+                        <strong id="success-time">---</strong>
+                    </div>
+                    <div id="success-reason-row" class="flex justify-between hidden">
+                        <span class="text-slate-500">មូលហេតុ៖</span>
+                        <strong id="success-reason-text" class="text-rose-600">---</strong>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 max-w-sm mx-auto">
+                    <button onclick="resetStudentFlow()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> ស្កេនវគ្គផ្សេងទៀត
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ================= MODERN MODAL FOR CUSTOM ALERTS ================= -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl transform scale-95 transition-all space-y-4">
+            <div id="modal-icon-container" class="w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl">
+                <i id="modal-icon" class="fa-solid"></i>
+            </div>
+            <div class="text-center space-y-1">
+                <h3 id="modal-title" class="font-bold text-lg text-slate-900">ចំណងជើង</h3>
+                <p id="modal-body" class="text-sm text-slate-500">ខ្លឹមសារសារ...</p>
+            </div>
+            <button onclick="closeModal()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition">
+                យល់ព្រម
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= ADD STUDENT MANUALLY MODAL ================= -->
+    <div id="manual-student-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-lg text-slate-900">បញ្ចូលវត្តមានដោយផ្ទាល់</h3>
+                <button onclick="toggleManualAddModal(false)" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">អត្តលេខនិស្សិត (ID) *</label>
+                    <input type="text" id="manual-student-id" placeholder="FE102938"
+                           class="w-full p-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 uppercase">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">ឈ្មោះពេញ *</label>
+                    <input type="text" id="manual-student-name" placeholder="CHHEANG VUTHY"
+                           class="w-full p-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 uppercase">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">ស្ថានភាព *</label>
+                    <select id="manual-student-status" onchange="toggleManualReasonField()" class="w-full p-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="present">វត្តមាន (Present)</option>
+                        <option value="leave">សុំច្បាប់ (Leave)</option>
+                        <option value="absent">អវត្តមាន (Absent)</option>
+                    </select>
+                </div>
+                <div id="manual-reason-container" class="hidden">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">មូលហេតុនៃការសុំច្បាប់</label>
+                    <input type="text" id="manual-student-reason" placeholder="ឧ. ឈឺក្បាល ឬ គ្រុនក្តៅ..."
+                           class="w-full p-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="toggleManualAddModal(false)" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition">
+                    បោះបង់
+                </button>
+                <button onclick="submitManualStudentByTeacher()" class="flex-1 py-2 bg-indigo-950 hover:bg-indigo-900 text-white font-bold rounded-xl text-sm transition">
+                    កត់ត្រាវត្តមាន
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-indigo-950 text-slate-400 border-t border-indigo-900 py-6 text-xs text-center">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>&copy; 2026 ប្រព័ន្ធគ្រប់គ្រងបញ្ជីវត្តមាននិស្សិតតាម QR Code Cloud. រក្សាសិទ្ធិគ្រប់យ៉ាង។</p>
+            <p>បង្កើតឡើងជាមួយ <span class="text-rose-500">&hearts;</span> សម្រាប់សកលវិទ្យាល័យបច្ចេកវិទ្យា</p>
+        </div>
+    </footer>
+
+    <!-- Firebase core logic integration (ES Module script) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, collection, query, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by system environment, or localized fallbacks
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'qr-student-attendance-app-2026';
+        
+        // Default Config in case it is loaded out of context
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "mock-api-key",
+                authDomain: "mock-auth-domain.firebaseapp.com",
+                projectId: "mock-project-id",
+                storageBucket: "mock-storage-bucket.appspot.com",
+                messagingSenderId: "123456789",
+                appId: "mock-app-id"
+            };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Core system state
+        window.appState = {
+            currentRole: null, 
+            studentProfile: { id: '', name: '' },
+            activeSession: null, 
+            attendance: [], 
+            activeScanTab: 'camera'
+        };
+
+        let activeSessionUnsubscribe = null;
+        let attendanceUnsubscribe = null;
+
+        // Authenticating User Anonymously or via Custom Token
+        async function authenticate() {
+            try {
+                updateNetworkStatus('connecting', 'កំពុងភ្ជាប់ទៅកាន់ Cloud...');
+                
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase auth error:", error);
+                updateNetworkStatus('disconnected', 'កំហុសបណ្តាញ Cloud!');
+            }
+        }
+
+        // Network Status indicator helper
+        function updateNetworkStatus(status, text) {
+            const el = document.getElementById('network-status');
+            const txt = document.getElementById('status-text');
+            if (!el || !txt) return;
+
+            txt.innerText = text;
+            if (status === 'connected') {
+                el.className = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 shadow-sm";
+                el.innerHTML = `<span class="w-1.5 h-1.5 mr-1.5 bg-emerald-500 rounded-full animate-ping"></span><span>${text}</span>`;
+            } else if (status === 'connecting') {
+                el.className = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 shadow-sm";
+                el.innerHTML = `<span class="w-1.5 h-1.5 mr-1.5 bg-amber-500 rounded-full animate-ping"></span><span>${text}</span>`;
+            } else {
+                el.className = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-800 shadow-sm";
+                el.innerHTML = `<span class="w-1.5 h-1.5 mr-1.5 bg-rose-500 rounded-full"></span><span>${text}</span>`;
+            }
+        }
+
+        // Set up Listeners for live database syncing
+        function startSyncListeners(user) {
+            if (!user) return;
+            updateNetworkStatus('connected', 'បានភ្ជាប់ទៅកាន់ Cloud');
+
+            // 1. Listen for active session
+            // Strict Path Rule 1: /artifacts/{appId}/public/data/sessions
+            const sessionsCol = collection(db, 'artifacts', appId, 'public', 'data', 'sessions');
+            
+            // RULE 2: No complex queries. We fetch all and find the active one in memory
+            activeSessionUnsubscribe = onSnapshot(sessionsCol, (snapshot) => {
+                let active = null;
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.status === 'active') {
+                        active = { id: doc.id, ...data };
+                    }
+                });
+
+                window.appState.activeSession = active;
+                
+                // If active session changed, update UI and listen to its attendance
+                if (active) {
+                    listenToAttendance(active.id);
+                } else {
+                    window.appState.attendance = [];
+                    if (attendanceUnsubscribe) {
+                        attendanceUnsubscribe();
+                        attendanceUnsubscribe = null;
+                    }
+                }
+
+                if (window.appState.currentRole === 'teacher') {
+                    window.refreshTeacherView();
+                }
+            }, (error) => {
+                console.error("Session listener error:", error);
+            });
+        }
+
+        // 2. Listen to attendance list of current active session in real-time
+        function listenToAttendance(sessionId) {
+            if (attendanceUnsubscribe) {
+                attendanceUnsubscribe();
+            }
+
+            // Strict Path Rule 1: /artifacts/{appId}/public/data/attendance
+            const attendanceCol = collection(db, 'artifacts', appId, 'public', 'data', 'attendance');
+            
+            attendanceUnsubscribe = onSnapshot(attendanceCol, (snapshot) => {
+                const records = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.sessionId === sessionId) {
+                        records.push({ id: doc.id, ...data });
+                    }
+                });
+
+                window.appState.attendance = records;
+                
+                if (window.appState.currentRole === 'teacher') {
+                    window.refreshTeacherView();
+                }
+            }, (error) => {
+                console.error("Attendance listener error:", error);
+            });
+        }
+
+        // Expose Firebase functions to global scope so HTML can access them
+        window.dbCreateSession = async function(title, teacher, time, shortCode) {
+            if (!auth.currentUser) return;
+            const sessionsCol = collection(db, 'artifacts', appId, 'public', 'data', 'sessions');
+            const sessionId = 'sess_' + Date.now();
+            
+            // Close any existing active session first
+            const querySnapshot = await getDocs(sessionsCol);
+            querySnapshot.forEach(async (docSnapshot) => {
+                if (docSnapshot.data().status === 'active') {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sessions', docSnapshot.id), { status: 'closed' });
+                }
+            });
+
+            // Set new active session doc
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sessions', sessionId), {
+                title: title,
+                teacher: teacher,
+                time: time,
+                shortCode: shortCode,
+                status: 'active',
+                createdAt: new Date().toISOString()
+            });
+        };
+
+        window.dbStopSession = async function() {
+            if (!auth.currentUser || !window.appState.activeSession) return;
+            const sessionRef = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', window.appState.activeSession.id);
+            await updateDoc(sessionRef, { status: 'closed' });
+        };
+
+        window.dbClearSessionRecords = async function() {
+            if (!auth.currentUser || !window.appState.activeSession) return;
+            const attendanceCol = collection(db, 'artifacts', appId, 'public', 'data', 'attendance');
+            
+            const snapshot = await getDocs(attendanceCol);
+            snapshot.forEach(async (docSnapshot) => {
+                if (docSnapshot.data().sessionId === window.appState.activeSession.id) {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'attendance', docSnapshot.id));
+                }
+            });
+        };
+
+        window.dbRemoveAttendanceRecord = async function(id) {
+            if (!auth.currentUser) return;
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'attendance', id));
+        };
+
+        window.dbSubmitAttendance = async function(studentId, studentName, registrationType, sessionCode, status = 'present', reason = '') {
+            if (!auth.currentUser) return false;
+            
+            // Find active session
+            const activeSess = window.appState.activeSession;
+            if (!activeSess || activeSess.shortCode !== sessionCode) {
+                return { success: false, reason: 'invalid_code' };
+            }
+
+            // Check if record already exists to perform update or prevent duplicate
+            const existingRecord = window.appState.attendance.find(r => r.studentId === studentId);
+            const attendanceId = existingRecord ? existingRecord.id : 'att_' + Date.now();
+
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'attendance', attendanceId), {
+                sessionId: activeSess.id,
+                studentId: studentId,
+                studentName: studentName,
+                timestamp: new Date().toISOString(),
+                type: registrationType,
+                status: status,
+                reason: reason
+            });
+
+            return { success: true, session: activeSess, status: status, reason: reason };
+        };
+
+        window.dbUpdateAttendanceStatus = async function(recordId, newStatus, reason = '') {
+            if (!auth.currentUser) return;
+            const recordRef = doc(db, 'artifacts', appId, 'public', 'data', 'attendance', recordId);
+            await updateDoc(recordRef, { 
+                status: newStatus,
+                reason: newStatus === 'leave' ? reason : ''
+            });
+        };
+
+        // Start app and listen to auth state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                startSyncListeners(user);
+            } else {
+                authenticate();
+            }
+        });
+
+        // Load cached local profiles
+        const studentProfileData = localStorage.getItem('qr_student_profile');
+        if (studentProfileData) {
+            window.appState.studentProfile = JSON.parse(studentProfileData);
+            document.getElementById('student-id').value = window.appState.studentProfile.id;
+            document.getElementById('student-name').value = window.appState.studentProfile.name;
+        }
+
+    </script>
+
+    <!-- Traditional UI Helper Script to manage pages and camera components -->
+    <script>
+        let qrCodeInstance = null;
+        let html5QrScanner = null;
+
+        window.onload = function() {
+            const dateObj = new Date();
+            const formattedDate = dateObj.toLocaleDateString('kh-KH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('current-date-view').innerText = formattedDate;
+            goToHome();
+        };
+
+        function showNotification(title, message, type = 'info') {
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalIcon = document.getElementById('modal-icon');
+            const iconContainer = document.getElementById('modal-icon-container');
+
+            modalTitle.innerText = title;
+            modalBody.innerText = message;
+
+            if (type === 'success') {
+                iconContainer.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-emerald-100 text-emerald-600";
+                modalIcon.className = "fa-solid fa-circle-check";
+            } else if (type === 'error') {
+                iconContainer.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-rose-100 text-rose-600";
+                modalIcon.className = "fa-solid fa-circle-exclamation";
+            } else {
+                iconContainer.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-indigo-100 text-indigo-600";
+                modalIcon.className = "fa-solid fa-circle-info";
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function goToHome() {
+            stopCameraScanner();
+            window.appState.currentRole = null;
+            document.getElementById('home-screen').classList.remove('hidden');
+            document.getElementById('teacher-dashboard').classList.add('hidden');
+            document.getElementById('student-portal').classList.add('hidden');
+        }
+
+        function switchRole(role) {
+            window.appState.currentRole = role;
+            document.getElementById('home-screen').classList.add('hidden');
+
+            if (role === 'teacher') {
+                document.getElementById('teacher-dashboard').classList.remove('hidden');
+                document.getElementById('student-portal').classList.add('hidden');
+                refreshTeacherView();
+            } else if (role === 'student') {
+                document.getElementById('student-portal').classList.remove('hidden');
+                document.getElementById('teacher-dashboard').classList.add('hidden');
+                
+                if (window.appState.studentProfile.id && window.appState.studentProfile.name) {
+                    showStudentScanView();
+                } else {
+                    showStudentProfileView();
+                }
+            }
+        }
+
+        function refreshTeacherView() {
+            const activeSession = window.appState.activeSession;
+            if (activeSession) {
+                document.getElementById('no-active-session').classList.add('hidden');
+                document.getElementById('active-session-view').classList.remove('hidden');
+
+                document.getElementById('display-session-title').innerText = activeSession.title;
+                document.getElementById('display-session-teacher').innerText = "សាស្ត្រាចារ្យ៖ " + (activeSession.teacher || "មិនកំណត់");
+                document.getElementById('display-session-time').innerText = "ម៉ោង៖ " + (activeSession.time || "មិនកំណត់");
+                document.getElementById('session-short-code').innerText = activeSession.shortCode;
+
+                const records = window.appState.attendance;
+                const presents = records.filter(r => r.status === 'present' || !r.status).length;
+                const leaves = records.filter(r => r.status === 'leave').length;
+                const absents = records.filter(r => r.status === 'absent').length;
+
+                document.getElementById('present-count').innerText = presents;
+                document.getElementById('leave-count').innerText = leaves;
+                document.getElementById('absent-count').innerText = absents;
+
+                generateQRCode(activeSession.shortCode);
+                renderAttendanceTable();
+            } else {
+                document.getElementById('no-active-session').classList.remove('hidden');
+                document.getElementById('active-session-view').classList.add('hidden');
+                renderAttendanceTable();
+            }
+        }
+
+        function generateQRCode(text) {
+            const container = document.getElementById("qrcode");
+            container.innerHTML = ""; 
+            
+            qrCodeInstance = new QRCode(container, {
+                text: text,
+                width: 180,
+                height: 180,
+                colorDark : "#030712", // Gray 950
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
+        async function createNewSession() {
+            if (window.appState.activeSession) {
+                showNotification("ដំណឹង", "សូមបិទការកត់ត្រាលើម៉ោងចាស់ជាមុនសិន មុននឹងបង្កើតថ្មី!", "error");
+                return;
+            }
+
+            const title = document.getElementById('session-title').value.trim();
+            const teacher = document.getElementById('session-teacher').value.trim();
+            const time = document.getElementById('session-time').value.trim();
+
+            if (!title) {
+                showNotification("បញ្ហា", "សូមបំពេញឈ្មោះមុខវិជ្ជា!", "error");
+                return;
+            }
+
+            const randNum = Math.floor(100000 + Math.random() * 900000);
+            const shortCode = `ATT-${randNum}`;
+
+            try {
+                await window.dbCreateSession(title, teacher, time, shortCode);
+                document.getElementById('session-title').value = '';
+                document.getElementById('session-teacher').value = '';
+                document.getElementById('session-time').value = '';
+                showNotification("ជោគជ័យ", "ម៉ោងសិក្សាថ្មីត្រូវបានបង្កើត និងដាក់ផ្សាយនៅលើ Cloud!", "success");
+            } catch (error) {
+                showNotification("បរាជ័យ", "មិនអាចបង្កើតម៉ោងសិក្សាបានទេ!", "error");
+            }
+        }
+
+        async function stopSession() {
+            try {
+                await window.dbStopSession();
+                showNotification("បិទការកត់ត្រា", "វគ្គសិក្សាត្រូវបានបិទការកត់ត្រាវត្តមានរួចហើយ។", "info");
+            } catch (e) {
+                showNotification("បញ្ហា", "មិនអាចបិទការកត់ត្រាបានទេ!", "error");
+            }
+        }
+
+        async function clearSessionRecords() {
+            try {
+                await window.dbClearSessionRecords();
+                showNotification("ជោគជ័យ", "បញ្ជីវត្តមានសម្រាប់វគ្គសិក្សានេះត្រូវបានសម្អាត!", "success");
+            } catch (e) {
+                showNotification("បញ្ហា", "មិនអាចសម្អាតបញ្ជីបានទេ!", "error");
+            }
+        }
+
+        function renderAttendanceTable() {
+            const tbody = document.getElementById('attendance-table-body');
+            tbody.innerHTML = '';
+
+            const recordsToRender = [...window.appState.attendance];
+
+            if (recordsToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                            <i class="fa-solid fa-folder-open text-3xl mb-2 block text-slate-300"></i>
+                            មិនទាន់មានវត្តមាននិស្សិតនៅឡើយទេ
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            recordsToRender.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            recordsToRender.forEach((record, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition duration-150";
+
+                const date = new Date(record.timestamp);
+                const timeString = date.toLocaleTimeString('km-KH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const currentStatus = record.status || 'present';
+                const reasonText = record.reason || '-';
+
+                // Status configuration mapping
+                let statusBadgeClass = "bg-emerald-100 text-emerald-800";
+                if (currentStatus === 'leave') {
+                    statusBadgeClass = "bg-amber-100 text-amber-800";
+                } else if (currentStatus === 'absent') {
+                    statusBadgeClass = "bg-rose-100 text-rose-800";
+                }
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-xs font-semibold text-slate-400">${recordsToRender.length - index}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-indigo-900 uppercase">${record.studentId}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-800 uppercase">${record.studentName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-600">${timeString}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <select onchange="updateRecordStatusInline('${record.id}', this.value)" class="text-xs font-bold rounded-full px-2 py-1 outline-none border cursor-pointer ${statusBadgeClass}">
+                            <option value="present" ${currentStatus === 'present' ? 'selected' : ''}>វត្តមាន</option>
+                            <option value="leave" ${currentStatus === 'leave' ? 'selected' : ''}>សុំច្បាប់</option>
+                            <option value="absent" ${currentStatus === 'absent' ? 'selected' : ''}>អវត្តមាន</option>
+                        </select>
+                    </td>
+                    <td class="px-6 py-4 text-xs font-medium max-w-[150px] truncate ${currentStatus === 'leave' ? 'text-amber-700 font-semibold' : 'text-slate-500'}" title="${reasonText}">
+                        ${reasonText}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-xs">
+                        <button onclick="removeAttendanceRecord('${record.id}')" class="text-rose-600 hover:text-rose-900 transition">
+                            <i class="fa-solid fa-trash-can"></i> លុបចេញ
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function removeAttendanceRecord(id) {
+            try {
+                await window.dbRemoveAttendanceRecord(id);
+                showNotification("បានលុប", "វត្តមាននិស្សិតម្នាក់នេះត្រូវបានលុបចេញពីបញ្ជី Cloud។", "info");
+            } catch (e) {
+                showNotification("កំហុស", "មិនអាចលុបបានទេ!", "error");
+            }
+        }
+
+        function toggleManualAddModal(show) {
+            const modal = document.getElementById('manual-student-modal');
+            if (show) {
+                if (!window.appState.activeSession) {
+                    showNotification("បញ្ហា", "សូមបង្កើត ឬបើកវគ្គសិក្សាសិន មុននឹងបញ្ចូលឈ្មោះនិស្សិត!", "error");
+                    return;
+                }
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+                document.getElementById('manual-student-id').value = '';
+                document.getElementById('manual-student-name').value = '';
+                document.getElementById('manual-student-status').value = 'present';
+                document.getElementById('manual-student-reason').value = '';
+                document.getElementById('manual-reason-container').classList.add('hidden');
+            }
+        }
+
+        async function submitManualStudentByTeacher() {
+            const idInput = document.getElementById('manual-student-id').value.trim().toUpperCase();
+            const nameInput = document.getElementById('manual-student-name').value.trim().toUpperCase();
+            const statusInput = document.getElementById('manual-student-status').value;
+            const reasonInput = document.getElementById('manual-student-reason').value.trim();
+
+            if (!idInput || !nameInput) {
+                showNotification("បញ្ហា", "សូមបំពេញទាំងអត្តលេខ និងឈ្មោះនិស្សិត!", "error");
+                return;
+            }
+
+            try {
+                const res = await window.dbSubmitAttendance(idInput, nameInput, 'manual', window.appState.activeSession.shortCode, statusInput, reasonInput);
+                if (res.success) {
+                    toggleManualAddModal(false);
+                    showNotification("ជោគជ័យ", "បានកត់ត្រាស្ថានភាពនិស្សិតដោយជោគជ័យ!", "success");
+                } else {
+                    showNotification("កំហុស", "ការចុះឈ្មោះមិនបានសម្រេច។", "error");
+                }
+            } catch (e) {
+                showNotification("បញ្ហា", "មានបញ្ហាក្នុងការតភ្ជាប់ជាមួយ Cloud!", "error");
+            }
+        }
+
+        function exportToCSV() {
+            const recordsToExport = [...window.appState.attendance];
+            let sessionTitle = "វត្តមាន";
+
+            if (window.appState.activeSession) {
+                sessionTitle = window.appState.activeSession.title.replace(/\s+/g, '_');
+            }
+
+            if (recordsToExport.length === 0) {
+                showNotification("គ្មានទិន្នន័យ", "មិនទាន់មានទិន្នន័យដើម្បីនាំចេញនៅឡើយទេ!", "error");
+                return;
+            }
+
+            let csvContent = "\uFEFF"; 
+            csvContent += "ល.រ,អត្តលេខនិស្សិត,ឈ្មោះពេញ,ម៉ោងចុះវត្តមាន,ប្រភេទកត់ត្រា,ស្ថានភាព,មូលហេតុ/សម្គាល់\n";
+
+            recordsToExport.forEach((record, index) => {
+                const date = new Date(record.timestamp);
+                const timeStr = date.toLocaleTimeString('km-KH');
+                const statusStr = record.status === 'present' ? 'វត្តមាន' : (record.status === 'leave' ? 'សុំច្បាប់' : 'អវត្តមាន');
+                const reasonStr = record.reason || '-';
+                csvContent += `${index + 1},"${record.studentId}","${record.studentName}","${timeStr}","${record.type === 'manual' ? 'បញ្ចូលដោយដៃ' : 'ស្កេន QR'}","${statusStr}","${reasonStr}"\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `បញ្ជីវត្តមាន_${sessionTitle}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function showStudentProfileView() {
+            document.getElementById('student-profile-step').classList.remove('hidden');
+            document.getElementById('student-scan-step').classList.add('hidden');
+            document.getElementById('attendance-success-screen').classList.add('hidden');
+        }
+
+        function showStudentScanView() {
+            document.getElementById('student-profile-step').classList.add('hidden');
+            document.getElementById('student-scan-step').classList.remove('hidden');
+            document.getElementById('attendance-success-screen').classList.add('hidden');
+
+            document.getElementById('student-profile-info-name').innerText = window.appState.studentProfile.name;
+            document.getElementById('student-profile-info-id').innerText = window.appState.studentProfile.id;
+
+            if (window.appState.activeScanTab === 'camera') {
+                startCameraScanner();
+            }
+        }
+
+        function editStudentProfile() {
+            stopCameraScanner();
+            showStudentProfileView();
+        }
+
+        function saveProfileAndContinue() {
+            const idInput = document.getElementById('student-id').value.trim().toUpperCase();
+            const nameInput = document.getElementById('student-name').value.trim().toUpperCase();
+
+            if (!idInput || !nameInput) {
+                showNotification("បំពេញព័ត៌មាន", "សូមបំពេញឈ្មោះ និងអត្តលេខនិស្សិតឱ្យបានត្រឹមត្រូវ!", "error");
+                return;
+            }
+
+            window.appState.studentProfile = { id: idInput, name: nameInput };
+            localStorage.setItem('qr_student_profile', JSON.stringify(window.appState.studentProfile));
+            showStudentScanView();
+        }
+
+        function switchScanTab(tab) {
+            window.appState.activeScanTab = tab;
+            
+            const btnCamera = document.getElementById('tab-btn-camera');
+            const btnManual = document.getElementById('tab-btn-manual');
+            const btnLeave = document.getElementById('tab-btn-leave');
+            
+            const viewCamera = document.getElementById('scanner-view');
+            const viewManual = document.getElementById('manual-code-view');
+            const viewLeave = document.getElementById('leave-request-view');
+
+            // Reset classes
+            [btnCamera, btnManual, btnLeave].forEach(b => b.className = "flex-1 py-2.5 text-center font-bold text-xs sm:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-900");
+            [viewCamera, viewManual, viewLeave].forEach(v => v.classList.add('hidden'));
+
+            if (tab === 'camera') {
+                btnCamera.className = "flex-1 py-2.5 text-center font-bold text-xs sm:text-sm border-b-2 border-emerald-600 text-emerald-600";
+                viewCamera.classList.remove('hidden');
+                startCameraScanner();
+            } else if (tab === 'manual') {
+                btnManual.className = "flex-1 py-2.5 text-center font-bold text-xs sm:text-sm border-b-2 border-emerald-600 text-emerald-600";
+                viewManual.classList.remove('hidden');
+                stopCameraScanner();
+            } else if (tab === 'leave') {
+                btnLeave.className = "flex-1 py-2.5 text-center font-bold text-xs sm:text-sm border-b-2 border-amber-500 text-amber-500";
+                viewLeave.classList.remove('hidden');
+                stopCameraScanner();
+            }
+        }
+
+        function startCameraScanner() {
+            if (html5QrScanner) {
+                try {
+                    html5QrScanner.stop();
+                } catch(e) {}
+            }
+
+            html5QrScanner = new Html5Qrcode("qr-reader");
+
+            const config = { 
+                fps: 15, 
+                qrbox: { width: 250, height: 250 } 
+            };
+
+            html5QrScanner.start(
+                { facingMode: "environment" }, 
+                config,
+                onQrScanSuccess,
+                onQrScanFailure
+            ).catch(err => {
+                console.error("Camera access failed:", err);
+                showNotification("កាមេរ៉ាមានបញ្ហា", "មិនអាចបើកកាមេរ៉ាបានទេ! យើងបានប្តូរទៅកាន់របៀបបញ្ចូលកូដដោយដៃជំនួសវិញ។", "error");
+                switchScanTab('manual');
+            });
+        }
+
+        function stopCameraScanner() {
+            if (html5QrScanner) {
+                try {
+                    html5QrScanner.stop().catch(err => {});
+                } catch (e) {}
+            }
+        }
+
+        function restartScanner() {
+            stopCameraScanner();
+            setTimeout(() => {
+                startCameraScanner();
+            }, 300);
+        }
+
+        function onQrScanSuccess(decodedText, decodedResult) {
+            stopCameraScanner();
+            submitAttendanceToSystem(decodedText, 'qr_scan');
+        }
+
+        function onQrScanFailure(error) {
+            // Silently try scanning next frames
+        }
+
+        function submitManualAttendance() {
+            const inputCode = document.getElementById('manual-session-code').value.trim().toUpperCase();
+            if (!inputCode) {
+                showNotification("បញ្ចូលលេខកូដ", "សូមបញ្ចូលកូដសម្គាល់វត្តមានរបស់គ្រូ!", "error");
+                return;
+            }
+
+            submitAttendanceToSystem(inputCode, 'manual');
+        }
+
+        async function submitAttendanceToSystem(sessionCode, registrationType) {
+            const studentId = window.appState.studentProfile.id;
+            const studentName = window.appState.studentProfile.name;
+
+            try {
+                const res = await window.dbSubmitAttendance(studentId, studentName, registrationType, sessionCode, 'present');
+                
+                if (res && res.success) {
+                    triggerConfetti();
+                    showSuccessScreen(res.session, new Date().toISOString(), 'present');
+                } else {
+                    showNotification("រកមិនឃើញ", "កូដសម្គាល់វត្តមានមិនត្រឹមត្រូវ ឬម៉ោងសិក្សាមិនទាន់ត្រូវបានបង្កើត!", "error");
+                    if (registrationType === 'qr_scan') {
+                        restartScanner();
+                    }
+                }
+            } catch (error) {
+                showNotification("បរាជ័យ", "កំហុសប្រព័ន្ធបណ្តាញ Cloud!", "error");
+                if (registrationType === 'qr_scan') {
+                    restartScanner();
+                }
+            }
+        }
+
+        function showSuccessScreen(session, timeStamp, status = 'present', reason = '') {
+            document.getElementById('student-scan-step').classList.add('hidden');
+            document.getElementById('attendance-success-screen').classList.remove('hidden');
+
+            document.getElementById('success-class-title').innerText = session.title;
+            document.getElementById('success-student-name').innerText = window.appState.studentProfile.name;
+            document.getElementById('success-student-id').innerText = window.appState.studentProfile.id;
+
+            const d = new Date(timeStamp);
+            document.getElementById('success-time').innerText = d.toLocaleDateString('km-KH') + " @ " + d.toLocaleTimeString('km-KH');
+
+            const badge = document.getElementById('success-status-badge');
+            const reasonRow = document.getElementById('success-reason-row');
+            const reasonText = document.getElementById('success-reason-text');
+
+            if (status === 'leave') {
+                badge.className = "px-3 py-1 text-xs font-bold rounded-full w-max mx-auto bg-amber-100 text-amber-800";
+                badge.innerText = "ស្ថានភាព៖ សុំច្បាប់ (Leave Request)";
+                reasonRow.classList.remove('hidden');
+                reasonText.innerText = reason;
+            } else {
+                badge.className = "px-3 py-1 text-xs font-bold rounded-full w-max mx-auto bg-emerald-100 text-emerald-800";
+                badge.innerText = "ស្ថានភាព៖ វត្តមាន (Present)";
+                reasonRow.classList.add('hidden');
+            }
+        }
+
+        function resetStudentFlow() {
+            document.getElementById('manual-session-code').value = '';
+            document.getElementById('leave-session-code').value = '';
+            document.getElementById('leave-reason').value = '';
+            showStudentScanView();
+        }
+
+        function triggerConfetti() {
+            var duration = 2.5 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        function toggleManualReasonField() {
+            const status = document.getElementById('manual-student-status').value;
+            const container = document.getElementById('manual-reason-container');
+            if (status === 'leave') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+                document.getElementById('manual-student-reason').value = '';
+            }
+        }
+
+        async function updateRecordStatusInline(recordId, newStatus) {
+            let reason = '';
+            if (newStatus === 'leave') {
+                reason = prompt("បញ្ចូលមូលហេតុនៃការសុំច្បាប់៖") || "សុំច្បាប់";
+            }
+            try {
+                await window.dbUpdateAttendanceStatus(recordId, newStatus, reason);
+                showNotification("ជោគជ័យ", "បានធ្វើបច្ចុប្បន្នភាពស្ថានភាពដោយជោគជ័យ", "success");
+            } catch (e) {
+                showNotification("បរាជ័យ", "មិនអាចកែប្រែស្ថានភាពបានទេ", "error");
+            }
+        }
+
+        async function submitLeaveRequest() {
+            const sessionCode = document.getElementById('leave-session-code').value.trim().toUpperCase();
+            const reason = document.getElementById('leave-reason').value.trim();
+
+            if (!sessionCode) {
+                showNotification("បញ្ចូលលេខកូដ", "សូមបញ្ចូលកូដសម្គាល់វត្តមានរបស់គ្រូ!", "error");
+                return;
+            }
+            if (!reason) {
+                showNotification("បញ្ចូលមូលហេតុ", "សូមបំពេញមូលហេតុនៃការសុំច្បាប់!", "error");
+                return;
+            }
+
+            const studentId = window.appState.studentProfile.id;
+            const studentName = window.appState.studentProfile.name;
+
+            try {
+                const res = await window.dbSubmitAttendance(studentId, studentName, 'manual', sessionCode, 'leave', reason);
+                
+                if (res && res.success) {
+                    triggerConfetti();
+                    showSuccessScreen(res.session, new Date().toISOString(), 'leave', reason);
+                } else {
+                    showNotification("រកមិនឃើញ", "កូដសម្គាល់វត្តមានមិនត្រឹមត្រូវ ឬម៉ោងសិក្សាមិនទាន់ត្រូវបានបង្កើត!", "error");
+                }
+            } catch (error) {
+                showNotification("បរាជ័យ", "កំហុសប្រព័ន្ធបណ្តាញ Cloud!", "error");
+            }
+        }
+    </script>
+</body>
+</html>
